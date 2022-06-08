@@ -1,8 +1,10 @@
 // implement your posts router here
-const Posts = require('./posts-model');
 const express = require('express');
 
 const router = express.Router();
+
+const Posts = require('./posts-model');
+
 
 // ADOPTERS ENDPOINTS
 router.get('/', (req, res) => {
@@ -16,88 +18,88 @@ router.get('/', (req, res) => {
         });
 });
 
-// router.get('/:id', (req, res) => {
-//     Adopter.findById(req.params.id)
-//         .then(adopter => {
-//             if (adopter) {
-//                 res.status(200).json(adopter);
-//             } else {
-//                 res.status(404).json({ message: 'Adopter not found' });
-//             }
-//         })
-//         .catch(error => {
-//             console.log(error);
-//             res.status(500).json({ message: 'Error retrieving the adopter' });
-//         });
-// });
+router.get('/:id', (req, res) => {
+    Posts.findById(req.params.id)
+        .then(posts => {
+            if (posts) {
+                res.status(200).json(posts);
+            } else {
+                res.status(404).json({ message: "The post with the specified ID does not exist" });
+            }
+        })
+        .catch(error => {
+            console.log(error);
+            res.status(500).json({ message: "The post information could not be retrieved" });
+        });
+});
 
-// router.get('/:id/dogs', (req, res) => {
-//     Adopter.findDogs(req.params.id)
-//         .then(dogs => {
-//             if (dogs.length > 0) {
-//                 res.status(200).json(dogs);
-//             } else {
-//                 res.status(404).json({ message: 'No dogs for this adopter' });
-//             }
-//         })
-//         .catch(error => {
-//             console.log(error);
-//             res.status(500).json({ message: 'Error retrieving the dogs for this adopter' });
-//         });
-// });
+router.get('/:id/posts', (req, res) => {
+    Posts.findDogs(req.params.id)
+        .then(posts => {
+            if (posts.length > 0) {
+                res.status(200).json(posts);
+            } else {
+                res.status(404).json({ message: "The post with the specified ID does not exist"  });
+            }
+        })
+        .catch(error => {
+            console.log(error);
+            res.status(500).json({ message: "The comments information could not be retrieved" });
+        });
+});
 
-// router.post('/', (req, res) => {
-//     let { name , email} =req.body
-//     if(typeof name !== 'string'|| name === ""){
-//         res.status(400).json({message: "invalid name"});
-//         return;
+router.post('/', (req, res) => {
+    let { title , contents} =req.body
+    if(typeof title !== 'string'|| contents === ""){
+        res.status(400).json({message: "invalid name"});
+        return;
 
         
-//     } else if(typeof email !== "string" || email === ""){
-//         res.status(400).json({message: "invalid email"})
-//         return;
-//     }
-//     name = name.trim();
-//     email = email.trim();
-//     Adopter.add(req.body)
-//         .then(adopter => {
-//             res.status(201).json(adopter);
-//         })
-//         .catch(error => {
-//             console.log(error);
-//             res.status(500).json({ message: 'Error adding the adopter' });
-//         });
-// });
+    } else if(typeof title !== "string" || contents === ""){
+        res.status(400).json({message: "Please provide title and contents for the post"})
+        return;
+    }
+    title = title.trim();
+    contents = contents.trim();
+    Posts.add(req.body)
+        .then(posts => {
+            res.status(201).json(posts);
+        })
+        .catch(error => {
+            console.log(error);
+            res.status(500).json({ message: "There was an error while saving the post to the database" });
+        });
+});
 
-// router.delete('/:id', (req, res) => {
-//     Adopter.remove(req.params.id)
-//         .then(count => {
-//             if (count > 0) {
-//                 res.status(200).json({ message: 'The adopter has been nuked' });
-//             } else {
-//                 res.status(404).json({ message: 'The adopter could not be found' });
-//             }
-//         })
-//         .catch(error => {
-//             console.log(error);
-//             res.status(500).json({ message: 'Error removing the adopter' });
-//         });
-// });
+router.delete('/:id', (req, res) => {
+    Posts.remove(req.params.id)
+        .then(count => {
+            if (count > 0) {
+                res.status(200);
+            } else {
+                res.status(404).json({ message: "The post with the specified ID does not exist"  });
+            }
+        })
+        .catch(error => {
+            console.log(error);
+            res.status(500).json({ message: "The post could not be removed"  });
+        });
+});
 
-// router.put('/:id', (req, res) => {
-//     const changes = req.body;
-//     Adopter.update(req.params.id, changes)
-//         .then(adopter => {
-//             if (adopter) {
-//                 res.status(200).json(adopter);
-//             } else {
-//                 res.status(404).json({ message: 'The adopter could not be found' });
-//             }
-//         })
-//         .catch(error => {
-//             console.log(error);
-//             res.status(500).json({ message: 'Error updating the adopter' });
-//         });
-// });
+router.put('/:id', (req, res) => {
+    const changes = req.body;
+    Posts.update(req.params.id, changes)
+        .then(posts => {
+            if (posts) {
+                res.status(200).json(posts);
+            } else {
+                res.status(404).json({ message: "The post with the specified ID does not exist" });
+            }
+        })
+        .catch(error => {
+            console.log(error);
+            res.status(500).json({ message: "The post information could not be modified" });
+        });
+});
 
 module.exports = router;
