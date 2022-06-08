@@ -50,18 +50,11 @@ router.get('/:id/posts', (req, res) => {
 
 router.post('/', (req, res) => {
     let { title , contents} =req.body
-    if(typeof title !== 'string'|| contents === ""){
-        res.status(400).json({message: "invalid name"});
-        return;
-
-        
-    } else if(typeof title !== "string" || contents === ""){
-        res.status(400).json({message: "Please provide title and contents for the post"})
+    if(!title || !contents ){
+        res.status(400).json({message: "Please provide title and contents for the post"});
         return;
     }
-    title = title.trim();
-    contents = contents.trim();
-    Posts.add(req.body)
+    Posts.insert(req.body)
         .then(posts => {
             res.status(201).json(posts);
         })
