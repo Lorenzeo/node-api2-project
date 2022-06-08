@@ -5,16 +5,16 @@ const express = require('express');
 const router = express.Router();
 
 // ADOPTERS ENDPOINTS
-// router.get('/', (req, res) => {
-//     Adopter.find(req.query)
-//         .then(adopters => {
-//             res.status(200).json(adopters);
-//         })
-//         .catch(error => {
-//             console.log(error);
-//             res.status(500).json({ message: 'Error retrieving the adopters' });
-//         });
-// });
+router.get('/', (req, res) => {
+    Posts.find()
+        .then(posts => {
+            res.status(200).json(posts);
+        })
+        .catch(error => {
+            console.log(error);
+            res.status(500).json({ message: 'The posts information could not be retrieved' });
+        });
+});
 
 // router.get('/:id', (req, res) => {
 //     Adopter.findById(req.params.id)
